@@ -33,3 +33,13 @@ The main files are:
 
 For more insight, the routes in the incomingCalls.py file is designed using the following flowchart:
 https://imgur.com/PWJiMnr
+
+# How does the current NLP works?
+I am using Wit.ai to do the NLP and to learn how Wit.ai does it, please play around with the demo app by wit.ai : https://labs.wit.ai/demo/index.html
+
+# How does the call service work?
+As the phone number is provided by twilio, I am using twilio's speech to text service to translate the callers speech commands into strings and then moving around in the route. To know more about how twilio works please take a look into the twilio's documentation:
+https://www.twilio.com/console/voice/build/getting-started
+
+
+
