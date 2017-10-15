@@ -1,4 +1,4 @@
-# Alfred-Beta
+# Alfred- Beta v0.1
 
 # Who is Alfred?
 Alfred is a smart bot, that lives on a phone number, yes a phone number. Currently in its beta version, it has the capability to schedule meetings for its owner, and populate the owners google calendar accordingly.
