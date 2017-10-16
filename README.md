@@ -8,7 +8,7 @@ Booking meetings using alfred is super simple and easy. All you have to do is ca
 
 # How does it work?
 
-The whole codebase for Alfred is written in python. Every user who wants to sign up for a personal assistant, have to sign up using their google account, and give alfred the access to their google calendar. Once done, the user will be provided with a twilio phone number which will be the access point for their own personal Alfred. 
+The whole codebase for Alfred is written in python. Every user who wants to sign up for a personal assistant has to sign up using their google account, and give alfred the access to their google calendar. Once done, the user will be provided with a twilio phone number which will be the access point for their own personal Alfred. 
 
 # What to expect in the future?
 
@@ -17,7 +17,7 @@ The features will be:
 1. Multiple user support.
 2. Event editing support.
 3. Personal goals/tasks support.
-4. NLP implementation so that the conversations with Alfred would be much better then it is currently.
+4. NLP implementation so that the conversations with Alfred would be much better than it is currently.
 5. Analytics support, to get an insight about what type of meetings/appointments are usually booked.
 6. Workspace support: Alfred for every employee in your company.
 7. Full customization for the conversation.
@@ -34,7 +34,7 @@ The main files are:
 For more insight, the routes in the incomingCalls.py file is designed using the following flowchart:
 https://imgur.com/PWJiMnr
 
-# How does the current NLP works?
+# How does the current NLP work?
 I am using Wit.ai to do the NLP and to learn how Wit.ai does it, please play around with the demo app by wit.ai : https://labs.wit.ai/demo/index.html
 
 # How does the call service work?
