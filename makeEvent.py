@@ -18,7 +18,6 @@ SCOPES = "https://www.googleapis.com/auth/calendar"
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = os.environ['GOOGLE_DEV_APP_NAME']
 
-
 def get_credentials():
     """Gets valid user credentials from storage.
 
@@ -46,54 +45,41 @@ def get_credentials():
             credentials = tools.run(flow, store)
     return credentials
 
-def listOfEvents(event_dict):
+#THIS CAME IN HANDY FOR TESTING OUT THE CALENDAR EVENTS
+# def listOfEvents(event_dict):
+#     credentials = get_credentials()
+#     # print(credentials)
+#     http = credentials.authorize(httplib2.Http())
+#     service = discovery.build('calendar', 'v3', http=http)
+#     now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+#     eventsResult = service.events().list(
+#         calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
+#         orderBy='startTime').execute()
+#     events = eventsResult.get('items', [])
+#     new_event = service.events().insert(calendarId='primary', body=event_dict).execute()
+#     if not events:
+#         for event in events:
+#             start = event['start'].get('dateTime', event['start'].get('date'))
+#
+
+# Create a new calendar event using the event object passed to the function
+def create_event(eventDetails):
     credentials = get_credentials()
-    # print(credentials)
     http = credentials.authorize(httplib2.Http())
     service = discovery.build('calendar', 'v3', http=http)
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    eventsResult = service.events().list(
-        calendarId='primary', timeMin=now, maxResults=10, singleEvents=True,
-        orderBy='startTime').execute()
-    events = eventsResult.get('items', [])
-    new_event = service.events().insert(calendarId='primary', body=event_dict).execute()
-    if not events:
-        for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-
-
-def create_event(event_dict):
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    service = discovery.build('calendar', 'v3', http=http)
-    start_time = event_dict["start"]["dateTime"]
-    end_time = event_dict["end"]["dateTime"]
+    start_time = eventDetails["start"]["dateTime"]
+    end_time = eventDetails["end"]["dateTime"]
     eventsResult = service.events().list(
         calendarId='primary', timeMax=end_time, timeMin=start_time, maxResults=10, singleEvents=True,
         orderBy='startTime').execute()
     event_list = eventsResult.get('items', [])
     if not event_list:
-        new_event = service.events().insert(calendarId='primary', body=event_dict).execute()
+        new_event = service.events().insert(calendarId='primary', body=eventDetails).execute()
         return [new_event["id"] , "added"]
     else:
         return "Busy"
 
-def fourteen_day_schedule():
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    service = discovery.build('calendar', 'v3', http=http)
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
-    eventsResult = service.events().list(
-    calendarId='primary', timeMin=now,maxResults=100).execute()
-    events = eventsResult.get('items', [])
-    event_dict = {}
-    for i in events:
-        event_dict['summary'] = {
-        "start_time" : i['start'],
-        "end_time"   : i['end']
-        }
-    return event_dict
-
+#Cancels the event who's id is passed to the function
 def cancel_event(event_id):
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())

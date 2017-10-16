@@ -1,22 +1,14 @@
 import os
-import random
-import string
 import callscripts
-from sendUniqueCode import sendCodeToUser, generatePinCode
 import makeEvent
+import datetime
+from sendUniqueCode import sendCodeToUser, generatePinCode
 from brain import parse_request
 from flask import Flask, request
 from twilio.rest import Client
 from twilio.twiml.voice_response import VoiceResponse, Gather
-import datetime
-from math import floor
-
-
 
 app = Flask(__name__)
-
-# enDate = ""
-# starDate = ""
 
 #The Event template, which gets filled during the call
 event = {
@@ -46,6 +38,7 @@ def voice():
     resp.append(gatherName)
     resp.redirect('/voice')
     return str(resp)
+
 #Alfred asks for the reason for the meeting
 @app.route('/summary', methods=['GET', 'POST'])
 def gather():
@@ -65,9 +58,9 @@ def gather():
 def location():
     resp = VoiceResponse()
     if 'SpeechResult' in request.values:
-        sumLong = request.values['SpeechResult']
-        print("Summary: " + sumLong)
-        event['summary'] = sumLong #adding to the dict
+        summaryLong = request.values['SpeechResult']
+        print("Summary: " + summaryLong)
+        event['summary'] = summaryLong #adding to the dict
         gatherLocation = Gather(input='speech dtmf', action='/startTime')
         gatherLocation.say(callscripts.AskLocation)
         resp.append(gatherLocation)
@@ -80,9 +73,9 @@ def location():
 def startTime():
     resp = VoiceResponse()
     if 'SpeechResult' in request.values:
-        locationDet = request.values['SpeechResult']
-        print("Location of the meeting: " + locationDet)
-        event['location'] = locationDet #adding to the dict
+        locationDetails = request.values['SpeechResult']
+        print("Location of the meeting: " + locationDetails)
+        event['location'] = locationDetails #adding to the dict
         gatherStartTime = Gather(input='speech dtmf', action='/endTime')
         gatherStartTime.say(callscripts.AskForStartTime + callscripts.TimeTemplate)
         resp.append(gatherStartTime)
@@ -96,8 +89,8 @@ def endTime():
     resp = VoiceResponse()
     if 'SpeechResult' in request.values:
         print("Start Time: " + request.values['SpeechResult'])
-        startTimeDet = parse_request(request.values['SpeechResult'])
-        event['start']['dateTime'] = startTimeDet[1] #adding to the dict
+        startTimeDetails = parse_request(request.values['SpeechResult'])
+        event['start']['dateTime'] = startTimeDetails[1] #adding to the dict
         gatherEndTime = Gather(input='speech dtmf', action='/bookMeeting')
         gatherEndTime.say(callscripts.AskForEndTime + callscripts.TimeTemplate)
         resp.append(gatherEndTime)
@@ -111,9 +104,9 @@ def endTime():
 def bookMeeting():
     resp = VoiceResponse()
     if 'SpeechResult' in request.values:
-        endTimeDet =  parse_request(request.values['SpeechResult'])
+        endTimeDetails =  parse_request(request.values['SpeechResult'])
         print("End Time: " + request.values['SpeechResult'])
-        event['end']['dateTime'] = endTimeDet[1] #adding to the dict
+        event['end']['dateTime'] = endTimeDetails[1] #adding to the dict
         resp.say(callscripts.WaitWhileBooking)
         CalendarResponse = makeEvent.create_event(event)
         print(CalendarResponse)
@@ -144,5 +137,4 @@ def retry():
 
 
 if __name__ == "__main__":
-    print(os.environ["USERNAMECURRENT"])
     app.run(debug=True)
